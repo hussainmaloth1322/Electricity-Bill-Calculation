@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Electricity Bill Calculator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f0f4f8;
+            color: #263445;
+        }
+
+        header {
+            background: #123b65;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 45px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #123b65;
+        }
+
+        label {
+            display: block;
+            margin-top: 22px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #087bce;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #075b99;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 18px;
+            background: #e5f5e9;
+            border-left: 5px solid #238443;
+            border-radius: 6px;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 12px;
+            color: #a11;
+            background: #ffe6e6;
+            border-radius: 6px;
+        }
+
+        .rates {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f2f6fa;
+            border-radius: 8px;
+        }
+
+        .rates h3 {
+            color: #123b65;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Electricity Bill Calculator</h1>
+    <p>Calculate your electricity bill easily</p>
+</header>
+
+<div class="container">
+
+    <h2>Calculate Your Bill</h2>
+
+    <form method="POST" action="/">
+        <label for="units">Enter Electricity Units:</label>
+
+        <input
+            type="number"
+            id="units"
+            name="units"
+            min="0"
+            step="1"
+            placeholder="Enter units consumed"
+            value="{{ units }}"
+            required
+        >
+
+        <button type="submit">Calculate Bill</button>
+    </form>
+
+    {% if bill is not none %}
+    <div class="result">
+        <h3>Electricity Bill Result</h3>
+
+        <p><strong>Units Consumed:</strong> {{ units }}</p>
+
+        <p>
+            <strong>Total Bill Amount:</strong>
+            Rs. {{ "%.2f"|format(bill) }}
+        </p>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="rates">
+        <h3>Sample Electricity Rates</h3>
+        <p>0–100 units: Rs. 1.50 per unit</p>
+        <p>101–200 units: Rs. 2.50 per additional unit</p>
+        <p>201–300 units: Rs. 4.00 per additional unit</p>
+        <p>Above 300 units: Rs. 6.00 per additional unit</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>Electricity Bill Calculation - DevOps Lab Project</p>
+</footer>
+
+</body>
+</html>
