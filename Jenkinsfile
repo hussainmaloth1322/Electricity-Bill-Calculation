@@ -1,31 +1,59 @@
+
 pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Git Checkout') {
             steps {
-                checkout scm
+                echo 'Source code is available from GitHub'
+            }
+        }
+
+        stage('Check Python') {
+            steps {
+                bat 'python --version'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                bat 'python -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Test Electricity Bill') {
+            steps {
+                bat 'python -c "from app import calculate_bill; assert calculate_bill(250) == 600.0; print(\'Electricity Bill Test Passed\')"'
+            }
+        }
+
+        stage('Check Docker') {
+            steps {
+                bat 'docker --version'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t electricity-app .'
+                bat 'docker build -t electricity-bill-app:latest .'
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Verify Docker Image') {
             steps {
-                bat 'docker rm -f electricity-container 2>NUL || exit /b 0'
-                // Host port 5001 avoids conflict with Q9's default port 5000.
-                bat 'docker run -d -p 5001:5000 --name electricity-container electricity-app'
+                bat 'docker images electricity-bill-app'
             }
         }
     }
 
     post {
         success {
-            echo 'Electricity bill container started. Test http://localhost:5001/bill?units=250'
+            echo 'Electricity Bill application Docker image created successfully!'
+        }
+
+        failure {
+            echo 'Build failed. Check the Jenkins Console Output.'
         }
     }
 }
